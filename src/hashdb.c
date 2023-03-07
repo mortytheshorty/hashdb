@@ -1,3 +1,6 @@
+// (c) 2023 Florian Giest
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,56 +13,69 @@
 
 #define hashdb_DEFAULT_CAP 7
 
-
-
+/*! @function
+ @return hashdb pointer
+*/
 hashdb* hashdb_create()
 {
-    hashdb *hm = calloc(1, sizeof *hm);
-    if(hm == NULL) {
+    hashdb *db = calloc(1, sizeof *db);
+    if(db == NULL) {
         return NULL;
     }
 
-    hm->cap = hashdb_DEFAULT_CAP;
+    db->cap = hashdb_DEFAULT_CAP;
 
-    hm->map = calloc(hm->cap, sizeof *hm->map);
-    if(hm->map == NULL) {
-        free(hm);
+    db->map = calloc(db->cap, sizeof *db->map);
+    if(db->map == NULL) {
+        free(db);
         return NULL;
     }
 
-    return hm;
+    return db;
+}
+/*! @function
+ @param db  hashdb pointer to destroy
+*/
+void hashdb_destroy(hashdb *db)
+{
+    free(db->map);
+    free(db);
 }
 
-void hashdb_destroy(hashdb *hm)
+/*! @function
+ @param db      hashdb pointer
+ @param key     key
+ @param value   value associated with key
+ @return        0 on success, ENOMEM on failure
+*/
+int hashdb_add(hashdb *db, const char *key, void *value)
 {
-    free(hm->map);
-    free(hm);
-}
-
-
-int hashdb_add(hashdb *hm, const char *key, void *value)
-{
-    if(hm->n == hm->cap) {
+    if(db->n == db->cap) {
         return -1; /* full, should not happen */
     }
 
     /* check if it should grow */
-    if(hashdb_grow(hm) != 0) {
+    if(hashdb_grow(db) != 0) {
         return ENOMEM;
     }
 
-    if(hashdb_insert(hm->map, hm->cap, key, value)) {
+    if(hashdb_insert(db->map, db->cap, key, value)) {
         return -1; /* internal error */
     }
 
-    hm->n++;
+    db->n++;
 
     return 0;
 }
 
-void* hashdb_get(hashdb *hm, const char *key)
+/*! @function
+ @param db      hashdb pointer
+ @param key     key to retrieve date from
+ @return        data associated with key
+*/
+void* hashdb_get(hashdb *db, const char *key)
 {
-    bucket *item = hashdb_return(hm->map, hm->cap, key);
+    bucket *item = hashdb_return(db->map, db->cap, key);
     if(item == NULL) {
         return item; /* not found */
     }
@@ -67,12 +83,16 @@ void* hashdb_get(hashdb *hm, const char *key)
     return item->value;
 }
 
-
-int hashdb_ensure_capacity(hashdb *hm, size_t new_capacity)
+/*! @function
+ @param db              hashdb pointer
+ @param new_capacity    new number of elements
+ @return                0 on succes, ENOMEM on failure
+*/
+int hashdb_ensure_capacity(hashdb *db, size_t new_capacity)
 {
 
     size_t new_cap = GetHigherPrime(new_capacity);
-    if(hashdb_realloc(hm, new_cap) != 0) {
+    if(hashdb_realloc(db, new_cap) != 0) {
         return ENOMEM;
     }
 

@@ -1,3 +1,6 @@
+// (c) 2023 Florian Giest
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
 #ifndef _HASHDB_INTERNAL_H
 #define _HASHBD_INTERNAL_H
 

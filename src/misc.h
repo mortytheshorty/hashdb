@@ -12,10 +12,8 @@
 #include <errno.h>
 
 /* definitions */
-#define HASHDB_DEFAULT_CAPACITY 7 /* prime number */
-#define HASHDB_DEFAULT_LOADFACTOR 0.75
-
-
+#define HASHDB_DEFAULT_CAPACITY 7       /* prime number */
+#define HASHDB_DEFAULT_LOADFACTOR 0.75  /*  */
 
 /*! @function
  @param     n   number to test if prime

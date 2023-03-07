@@ -1,6 +1,7 @@
+// (c) 2023 Florian Giest
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
 #include "misc.h"
-
-
 
 #define FNV_OFFSET 14695981039346656037UL
 #define FNV_PRIME  1099511628211UL
