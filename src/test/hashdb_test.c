@@ -9,7 +9,7 @@
 #include <string.h>
 
 
-#define ROCKYOU_PATH "../src/test/data/rockyou.txt"
+#define ROCKYOU_PATH "data/rockyou.txt"
 #define ROCKYOU_LINES 14344392
 
 #define HASHDB_START_GET_FROM 121512
